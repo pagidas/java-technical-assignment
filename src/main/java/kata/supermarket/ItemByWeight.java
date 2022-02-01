@@ -1,18 +1,21 @@
 package kata.supermarket;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class ItemByWeight implements Item {
 
-    private final WeighedProduct product;
+    private final WeightedProduct product;
     private final BigDecimal weightInKilos;
 
-    ItemByWeight(final WeighedProduct product, final BigDecimal weightInKilos) {
+    ItemByWeight(final WeightedProduct product, final BigDecimal weightInKilos) {
         this.product = product;
         this.weightInKilos = weightInKilos;
     }
 
     public BigDecimal price() {
-        return product.pricePerKilo().multiply(weightInKilos).setScale(2, BigDecimal.ROUND_HALF_UP);
+        return product.getPricingOffer().getBasePricing().getPrice()
+                .multiply(weightInKilos)
+                .setScale(2, RoundingMode.HALF_UP);
     }
 }
