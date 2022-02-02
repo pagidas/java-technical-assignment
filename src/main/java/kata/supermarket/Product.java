@@ -11,8 +11,4 @@ public class Product {
     public PricingOffer getPricingOffer() {
         return pricingOffer;
     }
-
-    public Item oneOf() {
-        return new ItemByUnit(this, 1);
-    }
 }

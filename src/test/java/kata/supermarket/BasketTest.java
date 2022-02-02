@@ -45,48 +45,60 @@ class BasketTest {
 
     private static Arguments multipleItemsPricedPerUnit() {
         return Arguments.of("multiple items priced per unit", "2.04",
-                Arrays.asList(aPackOfDigestives(), aPintOfMilk()));
+                Arrays.asList(onePackOfDigestives(), onePintOfMilk()));
     }
 
     private static Arguments aSingleItemPricedPerUnit() {
-        return Arguments.of("a single item priced per unit", "0.49", Collections.singleton(aPintOfMilk()));
+        return Arguments.of("a single item priced per unit", "0.49", Collections.singleton(onePintOfMilk()));
     }
 
     private static Arguments noItems() {
         return Arguments.of("no items", "0.00", Collections.emptyList());
     }
 
-    private static Item aPintOfMilk() {
-        return new Product(
-                new PricingOffer(
-                        new Pricing(1, new BigDecimal("0.49")))
-        ).oneOf();
+    private static Item onePackOfDigestives() {
+        return Items.buildByUnit()
+                .withProduct(aPackOfDigestives().get())
+                .get();
     }
 
-    private static Item aPackOfDigestives() {
-        return new Product(
-                new PricingOffer(
-                        new Pricing(1, new BigDecimal("1.55")))
-        ).oneOf();
+    private static Item onePintOfMilk() {
+        return Items.buildByUnit()
+                .withProduct(aPintOfMilk().get())
+                .get();
     }
 
-    private static WeightedProduct aKiloOfAmericanSweets() {
-        return new WeightedProduct(
-                new WeightedPricingOffer(
-                        new WeightedPricing(new BigDecimal("1.00"), new BigDecimal("4.99"))));
+    private static Products.ProductBuilder aPintOfMilk() {
+        return Products.buildByUnit()
+                .withBasePricing(1, "0.49");
+    }
+
+    private static Products.ProductBuilder aPackOfDigestives() {
+        return Products.buildByUnit()
+                .withBasePricing(1, "1.55");
+    }
+
+    private static Products.WeightedProductBuilder looseAmericanSweet() {
+        return Products.buildByWeight()
+                .withBasePricing("1.00", "4.99");
     }
 
     private static Item twoFiftyGramsOfAmericanSweets() {
-        return aKiloOfAmericanSweets().weighing(new BigDecimal(".25"));
+        return Items.buildByWeight()
+                .withProduct(looseAmericanSweet().get())
+                .withWeight(".25")
+                .get();
     }
 
-    private static WeightedProduct aKiloOfPickAndMix() {
-        return new WeightedProduct(
-                new WeightedPricingOffer(
-                        new WeightedPricing(new BigDecimal("1.00"), new BigDecimal("2.99"))));
+    private static Products.WeightedProductBuilder loosePickAndMix() {
+        return Products.buildByWeight()
+                .withBasePricing("1.00", "2.99");
     }
 
     private static Item twoHundredGramsOfPickAndMix() {
-        return aKiloOfPickAndMix().weighing(new BigDecimal(".2"));
+        return Items.buildByWeight()
+                .withProduct(loosePickAndMix().get())
+                .withWeight(".2")
+                .get();
     }
 }

@@ -14,11 +14,14 @@ class WeightedProductTest {
     @ParameterizedTest
     @MethodSource
     void itemFromWeighedProductHasExpectedUnitPrice(String pricePerKilo, String weightInKilos, String expectedPrice) {
-        final WeightedProduct weightedProduct = new WeightedProduct(
-                new WeightedPricingOffer(
-                        new WeightedPricing(new BigDecimal("1.00"), new BigDecimal(pricePerKilo))));
-        final Item weighedItem = weightedProduct.weighing(new BigDecimal(weightInKilos));
-        assertEquals(new BigDecimal(expectedPrice), weighedItem.price());
+        final BigDecimal price = new BigDecimal(expectedPrice);
+        final Item givenWeightedItem = Items.buildByWeight()
+                .withProduct(Products.buildByWeight()
+                        .withBasePricing("1.00", pricePerKilo)
+                        .get())
+                .withWeight(weightInKilos)
+                .get();
+        assertEquals(price, givenWeightedItem.price());
     }
 
     static Stream<Arguments> itemFromWeighedProductHasExpectedUnitPrice() {
