@@ -12,6 +12,10 @@ public class WeightedPricing {
         this.price = price;
     }
 
+    public BigDecimal getUnitsInKilos() {
+        return unitsInKilos;
+    }
+
     public BigDecimal getPrice() {
         return price;
     }

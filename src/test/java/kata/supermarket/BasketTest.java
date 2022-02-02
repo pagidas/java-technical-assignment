@@ -29,7 +29,11 @@ class BasketTest {
                 aSingleItemPricedPerUnit(),
                 multipleItemsPricedPerUnit(),
                 aSingleItemPricedByWeight(),
-                multipleItemsPricedByWeight()
+                multipleItemsPricedByWeight(),
+                anItemWithBuyOnePintOfMilkGetOneFree(),
+                anItemWithBuyTwoBarsOfChocolateForOnePound(),
+                anItemWithBuyThreePacksOfDigestivesForThePriceOfTwo(),
+                anItemWithBuyOneKiloOfLooseCarrotsForHalfPrice()
         );
     }
 
@@ -52,8 +56,62 @@ class BasketTest {
         return Arguments.of("a single item priced per unit", "0.49", Collections.singleton(onePintOfMilk()));
     }
 
+    private static Arguments anItemWithBuyOnePintOfMilkGetOneFree() {
+        return Arguments.of("buy one pint of milk get one free -- discount", "0.49", Collections.singleton(buyOnePintOfMilkGetOneFree()));
+    }
+
+    private static Arguments anItemWithBuyTwoBarsOfChocolateForOnePound() {
+        return Arguments.of("buy two bars of chocolate for £1 -- discount", "1.00", Collections.singleton(buyTwoBarsOfChocolateForOnePound()));
+    }
+
+    private static Arguments anItemWithBuyThreePacksOfDigestivesForThePriceOfTwo() {
+        return Arguments.of("buy three packs of digestive for the price of two -- discount", "3.10", Collections.singleton(buyThreePacksOfDigestivesForThePriceOfTwo()));
+    }
+
+    private static Arguments anItemWithBuyOneKiloOfLooseCarrotsForHalfPrice() {
+        return Arguments.of("buy one kilo of loose carrots for half price -- discount", ".60", Collections.singleton(buyOneKiloOfLooseCarrotsForHalfPrice()));
+    }
+
     private static Arguments noItems() {
         return Arguments.of("no items", "0.00", Collections.emptyList());
+    }
+
+    private static Item buyOneKiloOfLooseCarrotsForHalfPrice() {
+        return Items.buildByWeight()
+                .withProduct(looseCarrots()
+                        .withDiscountPricing("1.0", ".6")
+                        .get())
+                .withWeight("1.0")
+                .get();
+    }
+
+    private static Products.WeightedProductBuilder looseCarrots() {
+        return Products.buildByWeight()
+                .withBasePricing("1.0", "1.20");
+    }
+
+    private static Item buyThreePacksOfDigestivesForThePriceOfTwo() {
+        return Items.buildByUnit()
+                .withProduct(aPackOfDigestives()
+                        .withDiscountPricing(3, "3.1")
+                        .get())
+                .get(3);
+    }
+
+    private static Item buyTwoBarsOfChocolateForOnePound() {
+        return Items.buildByUnit()
+                .withProduct(aBarOfChocolate()
+                        .withDiscountPricing(2, "1.00")
+                        .get())
+                .get(2);
+    }
+
+    private static Item buyOnePintOfMilkGetOneFree() {
+        return Items.buildByUnit()
+                .withProduct(aPintOfMilk()
+                        .withDiscountPricing(2, "0.49")
+                        .get())
+                .get(2);
     }
 
     private static Item onePackOfDigestives() {
@@ -66,6 +124,11 @@ class BasketTest {
         return Items.buildByUnit()
                 .withProduct(aPintOfMilk().get())
                 .get();
+    }
+
+    private static Products.ProductBuilder aBarOfChocolate() {
+        return Products.buildByUnit()
+                .withBasePricing(1, ".7");
     }
 
     private static Products.ProductBuilder aPintOfMilk() {

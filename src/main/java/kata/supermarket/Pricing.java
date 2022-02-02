@@ -12,6 +12,10 @@ public class Pricing {
         this.price = price;
     }
 
+    public int getUnits() {
+        return units;
+    }
+
     public BigDecimal getPrice() {
         return price;
     }
