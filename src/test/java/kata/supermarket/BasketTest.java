@@ -33,8 +33,28 @@ class BasketTest {
                 anItemWithBuyOnePintOfMilkGetOneFree(),
                 anItemWithBuyTwoBarsOfChocolateForOnePound(),
                 anItemWithBuyThreePacksOfDigestivesForThePriceOfTwo(),
-                anItemWithBuyOneKiloOfLooseCarrotsForHalfPrice()
+                anItemWithBuyOneKiloOfLooseCarrotsForHalfPrice(),
+                anItemWeighingMoreThanItsDiscount(),
+                anItemHasMoreUnitsThanItsDiscount(),
+                anItemByWeightCanBeDiscountedMoreThanOnce(),
+                anItemByUnitCanBeDiscountedMoreThanOnce()
         );
+    }
+
+    private static Arguments anItemByUnitCanBeDiscountedMoreThanOnce() {
+        return Arguments.of("units exactly twice its discount", "1.00", Collections.singleton(unitsDiscountedMoreThanOnce()));
+    }
+
+    private static Arguments anItemByWeightCanBeDiscountedMoreThanOnce() {
+        return Arguments.of("weighing exactly twice its discount", "3.00", Collections.singleton(weighingDiscountedMoreThanOnce()));
+    }
+
+    private static Arguments anItemHasMoreUnitsThanItsDiscount() {
+        return Arguments.of("more units that its discount -- excess calculation", "0.99", Collections.singleton(moreUnitsThanDiscount()));
+    }
+
+    private static Arguments anItemWeighingMoreThanItsDiscount() {
+        return Arguments.of("weighing more than its discount -- excess calculation", "2.10", Collections.singleton(weighingMoreThanDiscount()));
     }
 
     private static Arguments aSingleItemPricedByWeight() {
@@ -74,6 +94,40 @@ class BasketTest {
 
     private static Arguments noItems() {
         return Arguments.of("no items", "0.00", Collections.emptyList());
+    }
+
+    private static Item unitsDiscountedMoreThanOnce() {
+        return Items.buildByUnit()
+                .withProduct(aPintOfMilk()
+                        .withDiscountPricing(2, "0.50")
+                        .get())
+                .get(4);
+    }
+
+    private static Item weighingDiscountedMoreThanOnce() {
+        return Items.buildByWeight()
+                .withProduct(looseCarrots()
+                        .withDiscountPricing("2.00", "1.50")
+                        .get())
+                .withWeight("4.00")
+                .get();
+    }
+
+    private static Item moreUnitsThanDiscount() {
+        return Items.buildByUnit()
+                .withProduct(aPintOfMilk()
+                        .withDiscountPricing(2, "0.50")
+                        .get())
+                .get(3);
+    }
+
+    private static Item weighingMoreThanDiscount() {
+        return Items.buildByWeight()
+                .withProduct(looseCarrots()
+                        .withDiscountPricing("2.00", "1.50")
+                        .get())
+                .withWeight("2.50")
+                .get();
     }
 
     private static Item buyOneKiloOfLooseCarrotsForHalfPrice() {
